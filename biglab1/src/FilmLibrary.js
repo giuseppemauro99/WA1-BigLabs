@@ -15,7 +15,7 @@ function FilmLibrary(){
         return [...this.films].sort((a,b) => {
                 if(a.watchDate == undefined) return 1; //mette alla fine gli undefined
                 if(b.watchDate == undefined) return -1;
-                a.watchDate.isAfter(b.dateWatched) ? 1 : -1;
+                a.watchDate.isAfter(b.watchDate) ? 1 : -1;
                 });
     }
 
