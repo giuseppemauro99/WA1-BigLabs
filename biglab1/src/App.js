@@ -49,10 +49,16 @@ function App() {
         <NavigationBar />
       </Row>
       <Row>
-        <>
-          <Filter />
-          <FilmRating films={FakeFilmList} />
-        </>
+        <Table>
+          <tr>
+            <td>
+              <Filter />
+            </td>
+            <td>
+              <FilmRating films={FakeFilmList} />
+            </td>
+          </tr>
+        </Table>
       </Row>
     </Container>
   );

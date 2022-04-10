@@ -1,4 +1,5 @@
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { startTransition } from "react";
 import {Container, Row, Col, Table, Button, ButtonGroup} from 'react-bootstrap';
 
 function FilmRating(props){
@@ -35,27 +36,52 @@ function FilmLibraryRow(props){
             <td>{props.film.id}</td>
             <td>{props.film.title}</td>
             <td>{props.film.isFavourite ? "true" : "false" }</td>
-            <td>{props.film.watchDate != undefined ? props.film.watchDate.format('YYYY-MM-DD') : ""}</td>
-            <td>{props.film.rating}</td>
-            <td>Actions</td>
+            <td>{props.film.watchDate != undefined ? props.film.watchDate.format('MMMM D, YYYY') : ""}</td>
+            <td><RatingStars rating={props.film.rating} /></td>
+            <td><Actions exam={props}/></td>
         </tr>
+    );
+}
+
+function RatingStars(props){
+    if(props.rating == undefined)
+        return( <EmptyStars count={5}/> );
+    else
+        return(<><FillStars count={props.rating}/><EmptyStars count={5-props.rating}/></>);
+}
+
+function FillStars(props){
+    const stars = [];
+    for(let i=0;i<props.count;i++)
+        stars.push(<i key={i} className="bi bi-star-fill"></i>);
+    return(<>{stars}</>);
+}
+
+function EmptyStars(props){
+    const stars = [];
+    for(let i=0;i<props.count;i++)
+        stars.push(<i key={i} className="bi bi-star"></i>);
+    return(<>{stars}</>);
+}
+
+function Actions(){
+    return(
+        <>
+          <i className="bi bi-pencil-square"></i>
+          <i className="bi bi-trash3"></i>
+        </>
     );
 }
 
 function Filter(props){
     return (
-      <>
-        <h3>Filter:</h3>
-        <>
-        <ButtonGroup  className="btn-group-vertical">
-          <Button variant="outline-primary">All</Button>
-          <Button variant="outline-primary">Favorites</Button>
-          <Button variant="outline-primary">Best Rated</Button>
-          <Button variant="outline-primary">Seen Last Month</Button>
-          <Button variant="outline-primary">Unseen</Button>
-        </ButtonGroup>
-        </>
-      </>
+        <Col>
+          <Row><Button variant="outline-primary">All</Button></Row>
+          <Row><Button variant="outline-primary">Favorites</Button></Row>
+          <Row><Button variant="outline-primary">Best Rated</Button></Row>
+          <Row><Button variant="outline-primary">Seen Last Month</Button></Row>
+          <Row><Button variant="outline-primary">Unseen</Button></Row>
+        </Col>
     );
   }
 
