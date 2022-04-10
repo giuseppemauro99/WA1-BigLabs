@@ -1,9 +1,10 @@
 import './App.css';
-import {Table,Col,Row, Container, Navbar, Nav, Form} from 'react-bootstrap';
-import "bootstrap/dist/css/bootstrap.min.css";
+import {Table, Col, Row, Container, Navbar, Nav, Form, Button} from 'react-bootstrap';
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import dayjs from 'dayjs';
 import {Film, FilmLibrary} from "./FilmLibrary.js";
-import {FilmRating} from "./components/FilmComponents.js";
+import {FilmRating, Filter} from "./components/FilmComponents.js";
 
 const FakeFilmList = [
   new Film(1,"Pulp Fiction", true, dayjs("March 10, 2022"), 5),
@@ -21,6 +22,12 @@ function SearchBar(props){
   );
 }
 
+function UserIcon(props){
+  return(
+    <Button><i className="bi bi-person"></i></Button>
+  );
+}
+
 function NavigationBar(props){
   return(
     <Navbar bg="primary" variant="dark">
@@ -28,6 +35,7 @@ function NavigationBar(props){
         <Navbar.Brand href="#">Film Library</Navbar.Brand>
         <Nav>
           <SearchBar />
+          <UserIcon />
         </Nav>
       </Container>
     </Navbar>
@@ -41,7 +49,10 @@ function App() {
         <NavigationBar />
       </Row>
       <Row>
-        <FilmRating films={FakeFilmList}/>
+        <>
+          <Filter />
+          <FilmRating films={FakeFilmList} />
+        </>
       </Row>
     </Container>
   );

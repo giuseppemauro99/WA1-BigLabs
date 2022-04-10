@@ -1,5 +1,5 @@
 import "bootstrap-icons/font/bootstrap-icons.css";
-import {Container, Row, Col, Table, Button} from 'react-bootstrap';
+import {Container, Row, Col, Table, Button, ButtonGroup} from 'react-bootstrap';
 
 function FilmRating(props){
     return(
@@ -34,7 +34,7 @@ function FilmLibraryRow(props){
         <tr>
             <td>{props.film.id}</td>
             <td>{props.film.title}</td>
-            <td>{props.film.isFavourite ? "true" : "false"}</td>
+            <td>{props.film.isFavourite ? "true" : "false" }</td>
             <td>{props.film.watchDate != undefined ? props.film.watchDate.format('YYYY-MM-DD') : ""}</td>
             <td>{props.film.rating}</td>
             <td>Actions</td>
@@ -42,4 +42,21 @@ function FilmLibraryRow(props){
     );
 }
 
-export {FilmRating};
+function Filter(props){
+    return (
+      <>
+        <h3>Filter:</h3>
+        <>
+        <ButtonGroup  className="btn-group-vertical">
+          <Button variant="outline-primary">All</Button>
+          <Button variant="outline-primary">Favorites</Button>
+          <Button variant="outline-primary">Best Rated</Button>
+          <Button variant="outline-primary">Seen Last Month</Button>
+          <Button variant="outline-primary">Unseen</Button>
+        </ButtonGroup>
+        </>
+      </>
+    );
+  }
+
+export {FilmRating, Filter};
