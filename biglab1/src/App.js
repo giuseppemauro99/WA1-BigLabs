@@ -16,9 +16,7 @@ const FakeFilmList = [
 function SearchBar(props){
   return(
     <Form>
-      <Form.Group>
         <Form.Control type="text" placeholder="Search" />
-      </Form.Group>  
     </Form>
   );
 }
