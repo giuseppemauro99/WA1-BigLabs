@@ -1,7 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\src"
+    "\\node_modules\\react-scripts",
+    "\\src",
+    "\\src\\components"
   ],
+  "SelectedNode": "\\src\\FilmLibrary.js",
   "PreviewInSolutionExplorer": false
 }

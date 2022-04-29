@@ -73,16 +73,4 @@ function Actions(){
     );
 }
 
-function Filter(props){
-    return (
-        <Col>
-          <Row><Button variant="outline-primary">All</Button></Row>
-          <Row><Button variant="outline-primary">Favorites</Button></Row>
-          <Row><Button variant="outline-primary">Best Rated</Button></Row>
-          <Row><Button variant="outline-primary">Seen Last Month</Button></Row>
-          <Row><Button variant="outline-primary">Unseen</Button></Row>
-        </Col>
-    );
-  }
-
-export {FilmRating, Filter};
+export {FilmRating};
