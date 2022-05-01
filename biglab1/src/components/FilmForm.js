@@ -9,7 +9,7 @@ function FilmForm(props) {
     const [title, setTitle] = useState('');
     const [isFavourite, setIsFavourite] = useState(false);
     const [watchDate, setWatchDate] = useState(dayjs().format('YYYY-MM-D'));
-    const [rating, setRating] = useState(0);
+    const [rating, setRating] = useState(undefined);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -21,11 +21,11 @@ function FilmForm(props) {
         <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
                 <Form.Label>id</Form.Label>
-                <Form.Control type="number" placeholder="Enter id" value={id} onChange={event => setId(event.target.value)}/>
+                <Form.Control type="number" placeholder="Enter id" required={true} value={id} onChange={event => setId(event.target.value)}/>
             </Form.Group>
             <Form.Group className="mb-3">
                 <Form.Label>title</Form.Label>
-                <Form.Control type="text" placeholder="Enter title" value={title} onChange={event => setTitle(event.target.value)}/>
+                <Form.Control type="text" placeholder="Enter title" required={true} minLength={1} value={title} onChange={event => setTitle(event.target.value)}/>
             </Form.Group>
             <Form.Group className="mb-3">
                 <Form.Label>isFavourite</Form.Label>
@@ -37,7 +37,7 @@ function FilmForm(props) {
             </Form.Group>
             <Form.Group className="mb-3">
                 <Form.Label>rating</Form.Label>
-                <Form.Control type="number" placeholder="Enter rating"  value={rating} onChange={event => setRating(event.target.value)}/>
+                <Form.Control type="number" placeholder="Enter rating" value={rating} min={0} max={5} onChange={event => setRating(event.target.value)}/>
             </Form.Group>
 
             <Button variant="primary" type="submit">Save</Button> 
