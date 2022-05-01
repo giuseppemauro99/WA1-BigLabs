@@ -1,18 +1,28 @@
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { startTransition } from "react";
-import {Container, Row, Col, Table, Button, ButtonGroup} from 'react-bootstrap';
+import {Container, Row, Col, Table, Button, ButtonGroup, FormCheck} from 'react-bootstrap';
+import {useEffect, useState} from 'react';
+import {Film} from "../FilmLibrary.js";
+import dayjs from 'dayjs';
 
 function FilmRating(props){
+    let filmToShow = [];
+    switch(props.filter){
+        case "All" :  filmToShow = props.films; break;
+        case "FilterFavorites": filmToShow = [...props.films].filter(f => f.isFavourite); break;
+        case "BestRated": filmToShow = [...props.films].filter(f => f.rating == 5); break;
+        case "SeenLastMonth": filmToShow = [...props.films].filter(f => f.watchDate != undefined).filter(f => f.watchDate.get('month') == dayjs().get('month')-1); break;
+        case "Unseen": filmToShow = [...props.films].filter(f => f.watchDate == undefined); break;
+    }
     return(
         <Col>
-            <FilmLibraryTable films={props.films} />
+            <FilmLibraryTable films={filmToShow} EditFilm={props.EditFilm} DeleteFilm={props.DeleteFilm}/>
         </Col>
     );
 }
 
 function FilmLibraryTable(props){
     return(
-        <Table stripped bordered>
+        <Table stripped="true" bordered>
             <thead>
                 <tr>
                     <th>id</th>
@@ -24,51 +34,68 @@ function FilmLibraryTable(props){
                 </tr>
             </thead>
             <tbody>
-                { props.films.map( (film) => <FilmLibraryRow key={film.id} film={film}/> ) }
+                {props.films.map( (film) => <FilmLibraryRow key={film.id} film={film} EditFilm={props.EditFilm} DeleteFilm={props.DeleteFilm}/>) }
             </tbody>
         </Table>
     );
 }
 
 function FilmLibraryRow(props){
+    const [editingMode, setEditingMode] = useState(true);
+
+    const [isFavourite, setIsFavourite] = useState(props.film.isFavourite);
+    const [rating, setRating] = useState(props.film.rating != undefined ? props.film.rating : 0);
+
+    const editIsFavourite = (isFav) => {
+        setIsFavourite(f => isFav);
+        const film = new Film(props.film.id, props.film.title, isFav, props.film.watchDate, props.film.rating);
+        props.EditFilm(film);
+    }
+
+    const editRating = (rat) => {
+        setRating(r => rat);
+        const film = new Film(props.film.id, props.film.title, props.film.isFavourite, props.film.watchDate, rat);
+        props.EditFilm(film);
+    }
+
     return(
         <tr>
             <td>{props.film.id}</td>
-            <td>{props.film.title}</td>
-            <td>{props.film.isFavourite ? "true" : "false" }</td>
+            <td style={isFavourite?{'color':'red'}:{'color':''}}>{props.film.title}</td>
+            <td><FormCheck.Input type="checkbox" checked={isFavourite} onChange={() => editIsFavourite(!isFavourite)}/></td>
             <td>{props.film.watchDate != undefined ? props.film.watchDate.format('MMMM D, YYYY') : ""}</td>
-            <td><RatingStars rating={props.film.rating} /></td>
-            <td><Actions exam={props}/></td>
+            <td><RatingStars rating={rating} editRating={editRating}/></td>
+            <td><Actions setEditingMode={props.setEditingMode} DeleteFilm={props.DeleteFilm} film={props.film}/></td>
         </tr>
     );
 }
 
 function RatingStars(props){
     if(props.rating == undefined)
-        return( <EmptyStars count={5}/> );
+        return(<FillStars count={0} editRating={props.editRating} />);
     else
-        return(<><FillStars count={props.rating}/><EmptyStars count={5-props.rating}/></>);
+        return(<FillStars count={props.rating} editRating={props.editRating} />);
 }
 
 function FillStars(props){
     const stars = [];
-    for(let i=0;i<props.count;i++)
-        stars.push(<i key={i} className="bi bi-star-fill"></i>);
+    let i=0;
+    for(i=0;i<props.count;i++)
+        stars.push(<Star key={i} ratingValue={i+1} isEmpty={false} editRating={props.editRating} />);
+    for(;i<5;i++)
+        stars.push(<Star key={i} ratingValue={i+1} isEmpty={true} editRating={props.editRating} />);
     return(<>{stars}</>);
 }
 
-function EmptyStars(props){
-    const stars = [];
-    for(let i=0;i<props.count;i++)
-        stars.push(<i key={i} className="bi bi-star"></i>);
-    return(<>{stars}</>);
+function Star(props){
+    return(<Button onClick={() => props.editRating(props.ratingValue)}><i className={props.isEmpty ? "bi bi-star":"bi bi-star-fill"}></i></Button>);
 }
 
-function Actions(){
+function Actions(props){
     return(
         <>
-          <i className="bi bi-pencil-square"></i>
-          <i className="bi bi-trash3"></i>
+          <Button onClick={() => props.setEditingMode(true)}><i className="bi bi-pencil-square"></i></Button>
+          <Button onClick={() => props.DeleteFilm(props.film)}><i className="bi bi-trash3" ></i></Button>
         </>
     );
 }

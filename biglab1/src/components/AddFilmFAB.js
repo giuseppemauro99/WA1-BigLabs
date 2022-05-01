@@ -11,7 +11,7 @@ function AddFilmFAB(props) {
                 tooltip="Add Film"
                 icon="fas fa-plus"
                 rotate={true}
-                onClick={() => {toggleButtonText(); props.toggleForm()} }>{buttonText}</Button>
+                onClick={() => {toggleButtonText(); props.toggleForm();} }>{buttonText}</Button>
     )
 }
 

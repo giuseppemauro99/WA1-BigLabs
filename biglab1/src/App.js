@@ -48,17 +48,17 @@ function NavigationBar(props){
 
 function App() {
   const [films, setFilms] = useState(FakeFilmList);
-  const [filmsToShow, setFilmsToShow] = useState(films);
   const [showForm, setShowForm] = useState(false);
+  const [filter, setFilter] = useState("All");
 
-  const FilterAll = () => { setFilmsToShow(FakeFilmList) };
-  const FilterFavorites = () => { setFilmsToShow(films => FakeFilmList.filter(f => f.isFavourite)) };
-  const BestRated = () => { setFilmsToShow(films => FakeFilmList.filter(f => f.rating == 5)) };
-  const SeenLastMonth = () => { setFilmsToShow(films => FakeFilmList.filter(f => f.watchDate != undefined).filter(f => f.watchDate.get('month') == dayjs().get('month')-1)) };
-  const Unseen = () => { setFilmsToShow(films => FakeFilmList.filter(f => f.watchDate == undefined)) };
+  const AddFilm = (film) => { setFilms(f => [...f,film])};
+  const toggleForm = () => { showForm ? setShowForm(false) : setShowForm(true)};
 
-  const AddFilm = (film) => { setFilms(f => f.push(film))}
-  const toggleForm = () => { showForm ? setShowForm(false) : setShowForm(true)}
+  const EditFilm = (film) => { setFilms(fs => fs.map(f => f.id == film.id ? film : f)) };
+  const DeleteFilm = (film) => {setFilms(f => f.filter( a => a != film)); }
+  
+  console.log("Film array contains:");//For debug purpose only
+  console.log(films);
   
   return (
     <Container className='App'>
@@ -67,17 +67,19 @@ function App() {
       </Row>
       <Row>
         <Table>
-          <tr>
-            <td>
-              <Filter FilterAll={FilterAll} FilterFavorites={FilterFavorites} BestRated={BestRated} SeenLastMonth={SeenLastMonth} Unseen={Unseen}/>
-            </td>
-            <td>
-              <FilmRating films={filmsToShow} />
-            </td>
-          </tr>
+          <tbody>
+            <tr>
+              <td>
+                <Filter filter={filter} setFilter={setFilter}/>
+              </td>
+              <td>
+                <FilmRating films={films} EditFilm={EditFilm} filter={filter} DeleteFilm={DeleteFilm}/>
+              </td>
+            </tr>
+          </tbody>
         </Table>
       </Row>
-      {showForm ? <FilmForm showForm={showForm} toggleForm={toggleForm} films={films} AddFilm={AddFilm}/> : ''}
+      {showForm ? <FilmForm toggleForm={toggleForm} films={films} AddFilm={AddFilm} /> : ''}
       <AddFilmFAB toggleForm={toggleForm}/>
     </Container>
   );
