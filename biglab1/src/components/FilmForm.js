@@ -5,16 +5,21 @@ import dayjs from 'dayjs';
 import {Film} from "../FilmLibrary.js";
 
 function FilmForm(props) {
-    const [id, setId] = useState('');
-    const [title, setTitle] = useState('');
-    const [isFavourite, setIsFavourite] = useState(false);
-    const [watchDate, setWatchDate] = useState(dayjs().format('YYYY-MM-D'));
-    const [rating, setRating] = useState(undefined);
+    console.log(props.filmToEdit);
+    const editingMode = props.editingMode ? true : false;
+    const [id, setId] = useState(props.filmToEdit ? props.filmToEdit.id : '');
+    const [title, setTitle] = useState(props.filmToEdit ? props.filmToEdit.title : '');
+    const [isFavourite, setIsFavourite] = useState(props.filmToEdit ? props.filmToEdit.isFavourite : false);
+    const [watchDate, setWatchDate] = useState(props.filmToEdit ? (props.filmToEdit_watchDate ? dayjs(props.filmToEdit_watchDate).format('YYYY-MM-DD') : undefined ) : undefined);
+    const [rating, setRating] = useState(props.filmToEdit ? props.filmToEdit.rating : 0);
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const film = new Film(id, title, isFavourite, dayjs(watchDate), rating);
-        props.AddFilm(film);
+        if(editingMode)
+            props.EditFilm(film);
+        else
+            props.AddFilm(film);
     }
 
     return (
@@ -25,7 +30,7 @@ function FilmForm(props) {
             </Form.Group>
             <Form.Group className="mb-3">
                 <Form.Label>title</Form.Label>
-                <Form.Control type="text" placeholder="Enter title" required={true} minLength={1} value={title} onChange={event => setTitle(event.target.value)}/>
+                <Form.Control type="text" placeholder="Enter title" required={true} value={title} onChange={event => setTitle(event.target.value)}/>
             </Form.Group>
             <Form.Group className="mb-3">
                 <Form.Label>isFavourite</Form.Label>

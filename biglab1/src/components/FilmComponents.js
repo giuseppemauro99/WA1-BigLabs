@@ -3,6 +3,7 @@ import {Container, Row, Col, Table, Button, ButtonGroup, FormCheck} from 'react-
 import {useEffect, useState} from 'react';
 import {Film} from "../FilmLibrary.js";
 import dayjs from 'dayjs';
+import { Link } from 'react-router-dom';
 
 function FilmRating(props){
     let filmToShow = [];
@@ -15,7 +16,7 @@ function FilmRating(props){
     }
     return(
         <Col>
-            <FilmLibraryTable films={filmToShow} EditFilm={props.EditFilm} DeleteFilm={props.DeleteFilm}/>
+            <FilmLibraryTable films={filmToShow} EditFilm={props.EditFilm} DeleteFilm={props.DeleteFilm} setfilmToEditFunc={props.setfilmToEditFunc} setEditingMode={props.setEditingMode}/>
         </Col>
     );
 }
@@ -34,15 +35,13 @@ function FilmLibraryTable(props){
                 </tr>
             </thead>
             <tbody>
-                {props.films.map( (film) => <FilmLibraryRow key={film.id} film={film} EditFilm={props.EditFilm} DeleteFilm={props.DeleteFilm}/>) }
+                {props.films.map( (film) => <FilmLibraryRow key={film.id} film={film} EditFilm={props.EditFilm} DeleteFilm={props.DeleteFilm} setfilmToEditFunc={props.setfilmToEditFunc} setEditingMode={props.setEditingMode}/>) }
             </tbody>
         </Table>
     );
 }
 
 function FilmLibraryRow(props){
-    const [editingMode, setEditingMode] = useState(true);
-
     const [isFavourite, setIsFavourite] = useState(props.film.isFavourite);
     const [rating, setRating] = useState(props.film.rating != undefined ? props.film.rating : 0);
 
@@ -65,7 +64,7 @@ function FilmLibraryRow(props){
             <td><FormCheck.Input type="checkbox" checked={isFavourite} onChange={() => editIsFavourite(!isFavourite)}/></td>
             <td>{props.film.watchDate != undefined ? props.film.watchDate.format('MMMM D, YYYY') : ""}</td>
             <td><RatingStars rating={rating} editRating={editRating}/></td>
-            <td><Actions setEditingMode={props.setEditingMode} DeleteFilm={props.DeleteFilm} film={props.film}/></td>
+            <td><Actions DeleteFilm={props.DeleteFilm} film={props.film} setfilmToEditFunc={props.setfilmToEditFunc} setEditingMode={props.setEditingMode}/></td>
         </tr>
     );
 }
@@ -92,9 +91,10 @@ function Star(props){
 }
 
 function Actions(props){
+    
     return(
         <>
-          <Button onClick={() => props.setEditingMode(true)}><i className="bi bi-pencil-square"></i></Button>
+          <Link to={'/edit'} state={{film: props.film, filmWatchDate: props.film.watchDate ? props.film.watchDate.format('MMMM D, YYYY') : undefined}}><Button onClick={() => {props.setfilmToEditFunc(props.film); props.setEditingMode(true)}}><i className="bi bi-pencil-square"></i></Button></Link>
           <Button onClick={() => props.DeleteFilm(props.film)}><i className="bi bi-trash3" ></i></Button>
         </>
     );

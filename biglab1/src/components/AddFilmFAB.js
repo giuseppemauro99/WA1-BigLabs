@@ -1,17 +1,17 @@
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { Container, Button, Link } from 'react-floating-action-button';
+import { Container, Button } from 'react-floating-action-button';
 import {useEffect, useState} from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 function AddFilmFAB(props) {
-    const [buttonText, setButtonText] = useState("Add Film");
-    const toggleButtonText = () => { buttonText == "Add Film" ? setButtonText(t => "Close") : setButtonText(t => "Add Film")};
+    const navigate = useNavigate();
 
     return (
             <Button
                 tooltip="Add Film"
                 icon="fas fa-plus"
-                rotate={true}
-                onClick={() => {toggleButtonText(); props.toggleForm();} }>{buttonText}</Button>
+                rotate={false}
+                onClick={() => navigate('/add') }>+</Button>
     )
 }
 
